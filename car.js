@@ -19,6 +19,33 @@ class Car {
     }
 
     update() {
+        this.#move()
+
+    }
+
+    draw(ctx) {
+        //rotation (car steers)
+        ctx.save();
+        //set center of rotation
+        ctx.translate(this.x, this.y);
+        ctx.rotate(-this.angle)
+
+        ctx.beginPath();
+        //draw rectangle
+        ctx.rect(
+            -this.width / 2,
+            -this.height / 2,
+            this.width,
+            this.height
+
+        );
+        ctx.fill();
+
+        //restore the previous saved context
+        ctx.restore();
+    }
+
+    #move() {
         if (this.controls.forward) {
             this.speed += this.acceleration;
         }
@@ -62,35 +89,8 @@ class Car {
             }
 
         }
-
-
-
-
-
         //steering wth unit circle
         this.x -= Math.sin(this.angle) * this.speed;
         this.y -= Math.cos(this.angle) * this.speed
-    }
-
-    draw(ctx) {
-        //rotation (car steers)
-        ctx.save();
-        //set center of rotation
-        ctx.translate(this.x, this.y);
-        ctx.rotate(-this.angle)
-
-        ctx.beginPath();
-        //draw rectangle
-        ctx.rect(
-            -this.width / 2,
-            -this.height / 2,
-            this.width,
-            this.height
-
-        );
-        ctx.fill();
-
-        //restore the previous saved context
-        ctx.restore();
     }
 }

@@ -6,19 +6,22 @@ const canvas = document.getElementById("myCanvas")
 canvas.height = window.innerHeight
 canvas.width = 200;
 
-//setup car
+//setup road and car
 //drawing context
 const ctx = canvas.getContext("2d");
-const car = new Car(100, 100, 30, 50)
+//road center = half of the canvas, and  canvas width, a bit smaller
+const road = new Road(canvas.width/2, canvas.width*0.9)
+const car = new Car(road.getLaneCenter(1), 100, 30, 50)
 
 
 animate();
 
 function animate(){
     car.update();
-    //this clears the parent canvas
+    //this clears the canvas
     canvas.height = window.innerHeight
 
+    road.draw(ctx);
     car.draw(ctx);
     //calls the animate method again
     requestAnimationFrame(animate)
