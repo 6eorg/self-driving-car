@@ -1,6 +1,6 @@
 class Controls {
 
-    constructor(){
+    constructor(controlType){
         this.forward = false;
         this.left = false;
         this.right = false;
@@ -8,7 +8,16 @@ class Controls {
 
         //add keyboard listener
 
-        this.#addKeyBoardListeners();
+        switch(controlType){
+            case "KEYS":
+                this.#addKeyBoardListeners();
+                break;
+            case "DUMMY":
+                console.log("moved dummy to forawrd")
+                this.forward = true;
+                break;
+        }
+        
 
     }
 

@@ -28,7 +28,6 @@ function getIntersection(A,B,C,D){
 
 //checks if two shapes (polygons/lines) intersects
 function polysIntersect(poly1, poly2) {
-    console.log("poly1: ", poly1, "poly2: ", poly2)
     for(let i = 0; i<poly1.length;i++){
         for(let j = 0; j<poly2.length; j++){
             const touch = getIntersection(

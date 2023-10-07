@@ -10,23 +10,40 @@ canvas.width = 200;
 //drawing context
 const ctx = canvas.getContext("2d");
 //road center = half of the canvas, and  canvas width, a bit smaller
-const road = new Road(canvas.width/2, canvas.width*0.9)
-const car = new Car(road.getLaneCenter(1), 100, 30, 50)
+const road = new Road(canvas.width / 2, canvas.width * 0.9)
+const car = new Car(road.getLaneCenter(1), 100, 30, 50, "KEYS",4)
+
+const traffic = [
+    new Car(road.getLaneCenter(1), -200, 30, 50, "DUMMY", 2)
+];
 
 
 animate();
 
-function animate(){
-    car.update(road.borders);
+function animate() {
+
+    //update traffic
+    for (let i = 0; i < traffic.length; i++) {
+        traffic[i].update(road.borders, []);
+    }
+
+    car.update(road.borders, traffic);
     //this clears the canvas
     canvas.height = window.innerHeight
-    
+
     //make road move
     ctx.save();
-    ctx.translate(0, -car.y+ canvas.height*0.7);
+    ctx.translate(0, -car.y + canvas.height * 0.7);
 
     road.draw(ctx);
-    car.draw(ctx);
+
+    //draw traffic
+    for (let i = 0; i < traffic.length; i++) {
+        traffic[i].draw(ctx, "red");
+    }
+
+
+    car.draw(ctx, "blue");
 
     //restore context again
     ctx.restore();
