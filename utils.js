@@ -25,3 +25,23 @@ function getIntersection(A,B,C,D){
 
     return null
 }
+
+//checks if two shapes (polygons/lines) intersects
+function polysIntersect(poly1, poly2) {
+    console.log("poly1: ", poly1, "poly2: ", poly2)
+    for(let i = 0; i<poly1.length;i++){
+        for(let j = 0; j<poly2.length; j++){
+            const touch = getIntersection(
+                poly1[i],
+                poly1[(i+1)%poly1.length], //if there is no next one it just takes the 0th position (1st corner) again (4%4 = 0). this works perfect bc the last point (eg. 4th in car) is then connected with the first one
+                poly2[j],
+                poly2[(j+1)%poly2.length]
+            );
+            if(touch){
+                return true;
+            }
+        }
+    }
+    return false;
+
+}
