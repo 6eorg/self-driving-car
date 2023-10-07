@@ -15,11 +15,14 @@ class Car {
 
         this.angle = 0;
 
+        this.sensor = new Sensor(this);
         this.controls = new Controls()
     }
 
-    update() {
+    update(roadBorders) {
         this.#move()
+        //update sensor as well
+        this.sensor.update(roadBorders);
 
     }
 
@@ -43,6 +46,9 @@ class Car {
 
         //restore the previous saved context
         ctx.restore();
+
+        //car has the responsibility to draw the context
+        this.sensor.draw(ctx)
     }
 
     #move() {
