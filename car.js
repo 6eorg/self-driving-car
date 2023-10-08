@@ -17,9 +17,14 @@ class Car {
 
         this.damaged = false;
 
+        this.useBrain = controlType == "AI";
+
         if (controlType != "DUMMY") {
             this.sensor = new Sensor(this);
-            console.log("car with sensors initialized")
+            this.brain = new NeuralNetwork(
+                //4 = 4 neurons for each direction
+                [this.sensor.rayCount,6,4]
+            );
         }
 
         this.controls = new Controls(controlType)
@@ -34,9 +39,27 @@ class Car {
         }
 
 
+        // if car is not dummy it has sensors
         if (this.sensor) {
             //update sensor as well
             this.sensor.update(roadBorders,traffic);
+
+            //format offset a bit. the null has to be replaced by 0 and the offset has to be reversed (the nearer the object the higher the value)
+            const offsets = this.sensor.readings.map(reading => {
+                reading == null ? 0 : 1 - reading.offset
+            })
+            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+   
+            
+            //controlType == AI
+            if (this.useBrain) {
+                //match the output with the steering
+                this.controls.forward = outputs[0]; //output neuron is 1 or 0
+                this.controls.left = outputs[1];
+                this.controls.right = outputs[2];
+                this.controls.reverse = outputs[3];
+            }
+
         }
 
 

@@ -11,7 +11,10 @@ canvas.width = 200;
 const ctx = canvas.getContext("2d");
 //road center = half of the canvas, and  canvas width, a bit smaller
 const road = new Road(canvas.width / 2, canvas.width * 0.9)
-const car = new Car(road.getLaneCenter(1), 100, 30, 50, "KEYS",4)
+
+//3 options: "KEYS", "DUMMY", "AI"
+
+const car = new Car(road.getLaneCenter(1), 100, 30, 50, "AI",3)
 
 const traffic = [
     new Car(road.getLaneCenter(1), -200, 30, 50, "DUMMY", 2)
