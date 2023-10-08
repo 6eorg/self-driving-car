@@ -1,4 +1,6 @@
-
+function restart(){
+    location.reload()
+}
 
 const canvas = document.getElementById("myCanvas")
 
@@ -16,20 +18,59 @@ const road = new Road(canvas.width / 2, canvas.width * 0.9)
 
 // const car = new Car(road.getLaneCenter(1), 100, 30, 50, "AI",3);
 
-const N = 500;
-const cars = generateCars(N)
-console.log("aaray of cars: ", cars)
+let numberOfCars = 500;
+let mutationRate = 0.1
+let randomTraffic = false
+
+//save /load user Settings from text inputs
+function saveSettings(){
+    numberOfCars = document.getElementById("numberOfCars").value;
+    mutationRate = document.getElementById("mutationRate").value;
+    randomTraffic = document.getElementById("randomTraffic").checked;
+    const settings = {numberOfCars: numberOfCars, mutationRate: mutationRate, randomTraffic: randomTraffic}
+    localStorage.setItem("settings", JSON.stringify(settings));
+
+}
+
+function loadSettings(){
+    if(localStorage.getItem("settings")){
+    const settings = JSON.parse(localStorage.getItem("settings"));
+    numberOfCars = Number(settings.numberOfCars);
+    mutationRate = Number(settings.mutationRate);
+    randomTraffic = settings.randomTraffic;
+
+    document.getElementById("numberOfCars").value = numberOfCars;
+    document.getElementById("mutationRate").value = mutationRate;
+    document.getElementById("randomTraffic").checked = randomTraffic
+     }else {
+
+        document.getElementById("numberOfCars").value = numberOfCars;
+        document.getElementById("mutationRate").value = mutationRate;
+        document.getElementById("randomTraffic").checked = randomTraffic
+
+     }
+
+
+}
+
+loadSettings();
+
+
+
+const cars = generateCars(numberOfCars)
+console.log("array of cars: ", cars)
 
 let bestCar = cars[0];
 
 //load neuronal network of best car if its in local storage
+
 
 if (localStorage.getItem("bestBrain")) {
     for (let i = 0; i < cars.length; i++) {
         cars[i].brain = JSON.parse(localStorage.getItem("bestBrain"))
         //best car is first in array at beginning, so don't touch his master brain
         if (i != 0) {
-            NeuralNetwork.mutate(cars[i].brain, 0.1);
+            NeuralNetwork.mutate(cars[i].brain, mutationRate);
         }
     }
 
@@ -64,7 +105,10 @@ function generateRandomTraffic(N) {
     return traffic
 }
 
-traffic = generateRandomTraffic(100)
+if(randomTraffic){
+    traffic = generateRandomTraffic(100)
+}
+
 
 
 
@@ -79,8 +123,13 @@ function generateCars(N) {
 }
 
 
+
+
+
+
+
 //function to save / remove neuronal network of the current best car in the local storage
-function save() {
+function saveBrain() {
     localStorage.setItem("bestBrain", JSON.stringify(bestCar.brain));
 }
 

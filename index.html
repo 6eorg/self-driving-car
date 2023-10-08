@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Self-driving car</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    
+
     <canvas id="myCanvas"></canvas>
     <div id="buttons">
-        <button onclick="save()">Save neuronal network</button>
+
+        <button onclick="saveBrain()">Save neuronal network</button>
         <button onclick="discard()">Reset</button>
+        <button onclick="restart()">Restart</button>
+
+        <div style="margin-top: 100px; margin-left: 20px;">
+            <p >AI cars: <input type="number" id="numberOfCars">
+            </p>
+            <p>Saved network mutation in pp: <input type="text" id="mutationRate"></p>
+            <p><input type="checkbox" name="" id="randomTraffic">Random traffic</p>
+            <button onclick="saveSettings()">Save Settings</button>
+        </div>
     </div>
     <script src="network.js"></script>
     <script src="car.js"></script>
@@ -20,6 +32,7 @@
     <script src="road.js"></script>
     <script src="utils.js"></script>
     <script src="main.js"></script>
-    
+
 </body>
+
 </html>
