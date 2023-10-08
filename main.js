@@ -16,31 +16,64 @@ const road = new Road(canvas.width / 2, canvas.width * 0.9)
 
 // const car = new Car(road.getLaneCenter(1), 100, 30, 50, "AI",3);
 
-const N = 100;
+const N = 500;
 const cars = generateCars(N)
 console.log("aaray of cars: ", cars)
 
 let bestCar = cars[0];
 
 //load neuronal network of best car if its in local storage
-if (localStorage.getItem("bestBrain")){
-    bestCar.brain = JSON.parse(
-        localStorage.getItem("bestBrain")
-    );
+
+if (localStorage.getItem("bestBrain")) {
+    for (let i = 0; i < cars.length; i++) {
+        cars[i].brain = JSON.parse(localStorage.getItem("bestBrain"))
+        //best car is first in array at beginning, so don't touch his master brain
+        if (i != 0) {
+            NeuralNetwork.mutate(cars[i].brain, 0.1);
+        }
+    }
+
 }
 
 
-const traffic = [
-    new Car(road.getLaneCenter(1), -200, 30, 50, "DUMMY", 2)
+let traffic = [
+    new Car(road.getLaneCenter(1), -100, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(0), -300, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(1), -300, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(1), -500, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(2), -500, 30, 50, "DUMMY", 2),
+
+    new Car(road.getLaneCenter(0), -700, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(2), -700, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(1), -900, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(0), -1100, 30, 50, "DUMMY", 2),
+    new Car(road.getLaneCenter(1), -1100, 30, 50, "DUMMY", 2)
+
+
 ];
+
+function generateRandomTraffic(N) {
+    const traffic = []
+    for (let i = 1; i < N; i++) {
+        for (let j = 0; j < Math.floor(Math.random() * 2 + 1); j++) {
+            console.log("generated")
+            traffic.push(new Car(road.getLaneCenter(Math.floor(Math.random() * 3)), -i * 200, 30, 50, "DUMMY", 2))
+
+        }
+    }
+    return traffic
+}
+
+traffic = generateRandomTraffic(100)
+
 
 
 animate();
 
-function generateCars(N){
+function generateCars(N) {
     const cars = [];
-    for (let i = 1; i<=N;i++){
-        cars.push(new Car(road.getLaneCenter(1), 100, 30,50, "AI"))
+    for (let i = 1; i <= N; i++) {
+        cars.push(new Car(road.getLaneCenter(1), 100, 30, 50, "AI"))
     }
     return cars;
 }
@@ -63,17 +96,16 @@ function animate() {
     }
 
     //update all cars
-    for (let i = 0; i< cars.length;i++){
+    for (let i = 0; i < cars.length; i++) {
         cars[i].update(road.borders, traffic);
     }
 
     //set the best car to the one that has the lowest y coordinate (the most up one)
-    bestCar = cars.find(car => 
+    bestCar = cars.find(car =>
         car.y == Math.min(...cars.map(c => c.y))
     );
-    console.log("bestCar", bestCar)
 
-    
+
     //this clears the canvas
     canvas.height = window.innerHeight
 
@@ -91,12 +123,12 @@ function animate() {
 
     //draw cars
     ctx.globalAlpha = 0.2;
-    for(let i = 0; i< cars.length; i++){
-         cars[i].draw(ctx, "blue");
+    for (let i = 0; i < cars.length; i++) {
+        cars[i].draw(ctx, "blue");
     }
     ctx.globalAlpha = 1;
     bestCar.draw(ctx, "blue", true)
-   
+
 
     //restore context again
     ctx.restore();
